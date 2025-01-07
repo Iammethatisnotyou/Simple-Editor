@@ -18,7 +18,9 @@ void control_c(int sig){
 }
 void printing(const vector<string> raw_text){
 	for(size_t i = 0; i < raw_text.size(); i++){
-			mvprintw(i, 0, "%s", raw_text[i].c_str());}
+		string line_with_number = to_string(i+1) + ' ' + raw_text[i];
+		mvprintw(i, 0, "%s", line_with_number.c_str());
+	}
 	clrtoeol(); /* Clear the rest of the line */
 }
 string reading(char *argv[], vector<string>& raw_text){
@@ -148,12 +150,7 @@ void editing(char *argv[]){
 				char_in_line++;} }
 		clear();
 		refresh();
-		for(size_t i = 0; i < raw_text.size(); i++){
-			mvprintw(i, 0, "%s", raw_text[i].c_str());
-				/* move(line_number+1, raw_text.size()), 0);} */
-		}
-		/* move(line_number+1, 0); */
-		/* move(line_number, 0); */
+		printing(raw_text);
 		clrtoeol(); /* Clear the rest of the line */
 		refresh();
 	}
