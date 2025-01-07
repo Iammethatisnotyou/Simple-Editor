@@ -6,15 +6,18 @@
 **Clone the repository**:
 ```bash
 git clone https://github.com/Iammethatisnotyou/Simple-Editor
-cd Simple-Editor```
+cd Simple-Editor
+```
 
 **Compile the program using the provided Makefile**
 ```bash
-make install```
+make install
+```
 
 **Start program**
 ```bash
-text_editor```
+text_editor
+```
 
 Todo is listed under todo.txt
 
