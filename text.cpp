@@ -16,7 +16,7 @@ bool signal_received = false;
 void control_c(int sig){
 	signal_received = true;
 }
-void printing(vector<string> raw_text){
+void printing(const vector<string> raw_text){
 	for(size_t i = 0; i < raw_text.size(); i++){
 			mvprintw(i, 0, "%s", raw_text[i].c_str());}
 	clrtoeol(); /* Clear the rest of the line */
@@ -34,7 +34,7 @@ string reading(char *argv[], vector<string>& raw_text){
 	File.close();
 	return elagent_text;
 }
-void saving(vector<string> raw_text, char *argv[]){
+void saving(const vector<string> raw_text, char *argv[]){
 	string new_text;
 	ofstream File(argv[1]);
 	for(size_t i = 0; i < raw_text.size(); i++){
@@ -43,9 +43,9 @@ void saving(vector<string> raw_text, char *argv[]){
 	File.close();
 }
 void editing(char *argv[]){
+	MEVENT event;
 	int char_in_line = 0;
 	int line_number  = 0;
-	string current_line;
 	vector<string> raw_text;
 
 	const string text = reading(argv, raw_text); /* This makes the screen not blank before input */
@@ -65,6 +65,28 @@ void editing(char *argv[]){
 		const int ch = getch();
 		if(ch == 27){
 			break;}
+		else if(ch == KEY_MOUSE){
+			if(getmouse(&event) == OK){
+				if(event.y >= 0 && event.y <= raw_text.size()){
+					line_number = event.y;}
+				else if(event.y >= raw_text.size()){
+					line_number = raw_text.size() -1;
+				}
+				else{
+					line_number = 0;
+				}
+
+				if(event.x <= 0){
+					char_in_line = 0;
+				}
+				else if(line_number >= 0 &&  line_number < raw_text.size()){
+					char_in_line = min(event.x, (int)raw_text[line_number].size() );
+				}
+				else{
+					char_in_line = 0;
+				}
+			}
+		}
 		else if(ch == ' '){
 			raw_text[line_number].insert(char_in_line, +1, ' ');
 			char_in_line++;}
@@ -147,6 +169,7 @@ void editing(char *argv[]){
 		printw("Not saving");}
 	refresh();
 	endwin();
+	mousemask(0, NULL);
 }
 bool verification(int argc, char *argv[]){
 	if(argc >= 3){
@@ -170,6 +193,8 @@ int main(int argc, char *argv[]){
 		return 1;}
 
 	initscr();
+	raw();
+	mousemask(ALL_MOUSE_EVENTS, NULL); /* The old events mask, The events you want to listen to */
 	keypad(stdscr, TRUE);
 	noecho();
 	cbreak();
