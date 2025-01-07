@@ -1,0 +1,4 @@
+iostream
+fstream
+string
+ncurses

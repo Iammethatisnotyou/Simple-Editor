@@ -1,0 +1,19 @@
+TODO
+
+Add to github
+Come up with a name for my text editor
+Improve efficiency and speed
+Fix cursor and make editor work on different terminal sizes
+Deceide what to do to differentiate text editor
+Fix all the warnings with "-Wall" and "-Wextra"
+
+Document the code for everyone else:
+- Add README with guide for Make and features
+- Document tricky parts in the code with comments
+
+Add new features:
+- Settings
+--- .config or settings menu
+- Clipboard for xorg
+- Learn about mouse input with ncurses and possibly add it
+- Change block cursor to '|'
