@@ -1,7 +1,5 @@
 TODO
 
-Add to github
-Come up with a name for my text editor
 Improve efficiency and speed
 Fix cursor and make editor work on different terminal sizes
 Deceide what to do to differentiate text editor
