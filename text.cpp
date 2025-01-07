@@ -53,7 +53,7 @@ void editing(char *argv[]){
 			printw("To exit press ESC to see if you want to save\nPress any key to continue");
 			refresh();
 			getch();
-			flushinp(); // Flush the input buffer to avoid leftover keys
+			flushinp(); /*Flush the input buffer to avoid leftover keys*/
 			clear();
 			printing(raw_text);
 			refresh();
@@ -126,7 +126,7 @@ void editing(char *argv[]){
 			mvprintw(i, 0, "%s", raw_text[i].c_str());
 				/*move(line_number+1, raw_text.size()), 0);}*/
 		}
-		//move(line_number+1, 0);
+		/*move(line_number+1, 0);*/
 		/*move(line_number, 0);*/
 		clrtoeol(); /*Clear the rest of the line*/
 		refresh();
