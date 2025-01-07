@@ -2,3 +2,8 @@ iostream
 fstream
 string
 ncurses
+vector
+stdlib
+csignal
+sstream
+

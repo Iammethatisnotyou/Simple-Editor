@@ -1,6 +1,7 @@
 TODO
 
 Improve efficiency and speed
+Change values to const if they don't change
 Fix cursor and make editor work on different terminal sizes
 Deceide what to do to differentiate text editor
 Fix all the warnings with "-Wall" and "-Wextra"
@@ -15,3 +16,4 @@ Add new features:
 - Clipboard for xorg
 - Learn about mouse input with ncurses and possibly add it
 - Change block cursor to '|'
+- Get Ctrl backspace to work & Ctrl C to work better

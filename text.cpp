@@ -1,3 +1,7 @@
+/* 
+ * See LICENSE file for copyright and license details. 
+*/
+
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -15,7 +19,7 @@ void control_c(int sig){
 void printing(vector<string> raw_text){
 	for(size_t i = 0; i < raw_text.size(); i++){
 			mvprintw(i, 0, "%s", raw_text[i].c_str());}
-	clrtoeol(); /*Clear the rest of the line*/
+	clrtoeol(); /* Clear the rest of the line */
 }
 string reading(char *argv[], vector<string>& raw_text){
 	string text;
@@ -40,12 +44,12 @@ void saving(vector<string> raw_text, char *argv[]){
 }
 void editing(char *argv[]){
 	int char_in_line = 0;
-	int line_number = 0;
+	int line_number  = 0;
 	string current_line;
 	vector<string> raw_text;
 
-	string text = reading(argv, raw_text); /*This makes the screen not blank before input*/
-	printw(text.c_str()); /*Show text before input*/
+	const string text = reading(argv, raw_text); /* This makes the screen not blank before input */
+	printw(text.c_str()); /* Show text before input */
 	while (true){
 		if(signal_received){ /*Ctrl C*/
 			signal_received = false;
@@ -53,12 +57,12 @@ void editing(char *argv[]){
 			printw("To exit press ESC to see if you want to save\nPress any key to continue");
 			refresh();
 			getch();
-			flushinp(); /*Flush the input buffer to avoid leftover keys*/
+			flushinp(); /* Flush the input buffer to avoid leftover keys */
 			clear();
 			printing(raw_text);
 			refresh();
 			continue;}
-		int ch = getch();
+		const int ch = getch();
 		if(ch == 27){
 			break;}
 		else if(ch == ' '){
@@ -124,18 +128,18 @@ void editing(char *argv[]){
 		refresh();
 		for(size_t i = 0; i < raw_text.size(); i++){
 			mvprintw(i, 0, "%s", raw_text[i].c_str());
-				/*move(line_number+1, raw_text.size()), 0);}*/
+				/* move(line_number+1, raw_text.size()), 0);} */
 		}
-		/*move(line_number+1, 0);*/
-		/*move(line_number, 0);*/
-		clrtoeol(); /*Clear the rest of the line*/
+		/* move(line_number+1, 0); */
+		/* move(line_number, 0); */
+		clrtoeol(); /* Clear the rest of the line */
 		refresh();
 	}
 	clear();
 
 	printw("Would you like to save? y or n");
 	refresh();
-	char save_choice = getch();
+	const char save_choice = getch();
 	if(tolower(save_choice == 'y')){
 		saving(raw_text, argv);
 		printw("Saving to file");}
@@ -158,7 +162,6 @@ bool verification(int argc, char *argv[]){
 		return false;
 	}
 	File.close();
-
 	return true;
 }
 
@@ -170,7 +173,7 @@ int main(int argc, char *argv[]){
 	keypad(stdscr, TRUE);
 	noecho();
 	cbreak();
-	signal(SIGINT, control_c); /*Makes Control C not exit*/
+	signal(SIGINT, control_c); /* Makes Control C not exit */
 
 	editing(argv);
 	return 0;
