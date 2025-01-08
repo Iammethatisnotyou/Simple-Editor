@@ -1,19 +1,22 @@
 # My text editor - A simple text editor in C++
 # For information check the README, .gitignore and LICENSE files
 
-NCURSES = -lncurses
-CXX = g++
+NCURSES  = -lncurses
+CXX      = g++
 Warnings = -Wall -Wextra
 CXXFLAGS = -std=c++17
 
-TARGET = text_editor
+TARGET  = text_editor
+SOURCES = text.cpp
+HEADERS = config.h
+BACKUP  = bk_text.cpp
 
 all: $(TARGET)
 
-$(TARGET): text.cpp
-	$(CXX) $(CXXFLAGS) $(Warnings) $(NCURSES) -o $@ text.cpp
+$(TARGET): $(SOURCES) $(HEADERS)
+	$(CXX) $(CXXFLAGS) $(Warnings) $(NCURSES) -o $@ $(SOURCES)
 copy:
-	cp text.cpp bk_text.cpp
+	cp $(SOURCES) $(BACKUP)
 clean:
 	rm -f $(TARGET)
 
