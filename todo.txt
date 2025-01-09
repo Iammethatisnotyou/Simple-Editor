@@ -1,12 +1,12 @@
 TODO
 
 Improve efficiency and speed
+Fix errors
 Change values to const if they don't change
 Fix cursor and make editor work on different terminal sizes
 Deceide what to do to differentiate text editor
 Fix all the warnings with "-Wall" and "-Wextra"
-Add line numbers to every line
-
+Add relative line
 Document the code for everyone else:
 - Add README with guide for Make and features
 - Document tricky parts in the code with comments

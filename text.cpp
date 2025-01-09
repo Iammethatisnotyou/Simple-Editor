@@ -19,16 +19,27 @@ void control_c(int sig){
 	signal_received = true;
 }
 
-void printing(const vector<string> raw_text){
+void printing(const vector<string> raw_text, int &line_number, int &char_in_line){
+	/* curs_set(0); Cursor turned off, will fix later declared in main */
 	for (size_t i = 0; i < raw_text.size(); i++){
-		if (numbered_lines){
-			string line_with_number = to_string(i+1) + ' ' + raw_text[i];
+		/* if (line_wrapping && raw_text[i].size() > 20) {
+			string new_line = raw_text[i].substr(20);
+			raw_text[i] = raw_text[i].substr(0, 20);
+			raw_text.insert(raw_text.begin() + i + 1, new_line);
+			char_in_line = 0;
+			line_number++;
+			i--;
+
+		} */
+		//move(raw_text[line_number].size(), char_in_line);
+		string line_with_number = to_string(i+1) + ' ' + raw_text[i];
+		if (numbered_lines) {
 			mvprintw(i, 0, "%s", line_with_number.c_str());
 		} else {
 			mvprintw(i, 0, "%s", raw_text[i].c_str());
 		}
-	}
 	clrtoeol(); /* Clear the rest of the line */
+	}
 }
 string reading(char *argv[], vector<string>& raw_text){
 	string text;
@@ -69,8 +80,9 @@ void editing(char *argv[]){
 	int line_number  = 0;
 	vector<string> raw_text;
 	thread t1(auto_saving, argv, ref(raw_text) );
+	t1.detach();
 	const string text = reading(argv, raw_text); /* This makes the screen not blank before input */
-	printw(text.c_str()); /* Show text before input */
+	printing(raw_text, line_number, char_in_line); /* Show text before input */
 	while (true){
 		if (signal_received){ /*Ctrl C*/
 			signal_received = false;
@@ -80,12 +92,24 @@ void editing(char *argv[]){
 			getch();
 			flushinp(); /* Flush the input buffer to avoid leftover keys */
 			clear();
-			printing(raw_text);
+			printing(raw_text, line_number, char_in_line);
 			refresh();
 			continue;}
 		const int ch = getch();
 		if (ch == 27){
 			break;}
+
+		else if (ch == 9){
+			if (tab_spaces){
+				raw_text[line_number].insert(char_in_line, tab_width, ' ');
+				char_in_line += tab_width;
+			}
+			else{
+				raw_text[line_number].insert(char_in_line, +1, '\t');
+				char_in_line++;
+
+			}
+		}
 		else if (ch == KEY_MOUSE){
 			if (getmouse(&event) == OK){
 				if (event.y >= 0 && event.y <= raw_text.size()){
@@ -136,8 +160,9 @@ void editing(char *argv[]){
 				string new_line = raw_text[line_number].substr(char_in_line);
 				raw_text[line_number] = raw_text[line_number].substr(0, char_in_line);
 				raw_text.insert(raw_text.begin() + line_number +1, new_line);
+				char_in_line = 0;
 				line_number++;
-				char_in_line = 0;} }
+				} }
 		else if (ch == KEY_UP){
 			if (raw_text.size() > 0){
 				if (char_in_line > raw_text[line_number -1].size()){
@@ -169,7 +194,7 @@ void editing(char *argv[]){
 				char_in_line++;} }
 		clear();
 		refresh();
-		printing(raw_text);
+		printing(raw_text, line_number, char_in_line);
 		clrtoeol(); /* Clear the rest of the line */
 		refresh();
 	}
@@ -214,6 +239,7 @@ int main(int argc, char *argv[]){
 	keypad(stdscr, TRUE);
 	noecho();
 	cbreak();
+	curs_set(0);
 	signal(SIGINT, control_c); /* Makes Control C not exit */
 	editing(argv);
 	return 0;

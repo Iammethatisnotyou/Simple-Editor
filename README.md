@@ -19,6 +19,12 @@ make install
 text_editor
 ```
 
+**Configuration**
+Edit the config.h and recompile
+```bash
+sudo make uninstall && make install
+```
+
 Todo is listed under todo.txt
 
 License

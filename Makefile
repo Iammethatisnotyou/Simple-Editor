@@ -6,7 +6,7 @@ CXX      = g++
 Warnings = -Wall -Wextra
 CXXFLAGS = -std=c++17
 
-TARGET  = text_editor
+TARGET  = se
 SOURCES = text.cpp
 HEADERS = config.h
 BACKUP  = bk_text.cpp
@@ -14,7 +14,7 @@ BACKUP  = bk_text.cpp
 all: $(TARGET)
 
 $(TARGET): $(SOURCES) $(HEADERS)
-	$(CXX) $(CXXFLAGS) $(Warnings) $(NCURSES) -o $@ $(SOURCES)
+	$(CXX) $(CXXFLAGS) $(NCURSES) -o $@ $(SOURCES)
 copy:
 	cp $(SOURCES) $(BACKUP)
 clean:
