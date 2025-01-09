@@ -1,6 +1,7 @@
 # Testing.txt to test editor
 /testing.txt
 /text_editor
+/se
 # Prerequisites
 *.d
 
