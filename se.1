@@ -1,0 +1,24 @@
+.TH SE 1 "0.7" "SE Manual"
+.SH NAME
+se \- simple editor
+.SH SYNOPSIS
+.B se
+.I filename
+.SH DESCRIPTION
+se is a Simple Editor written in C++ is a minimalist suckless inspired editor. It edits through ncurses and can be customized to your liking see CUSTOMIZATION. It uses Ascii for keys and signal.h for ctrl C for key presses.
+.SH USAGE
+The follow commands are supported:
+.SS Arrows
+Up, down, left and right arrow moves cursor respectively.
+.SS Mouse
+Clicking with the mouse puts cursor there.
+.SS Ascii
+Typing printable characters inserts characters.
+.SH CUSTOMIZATION
+se is customized by customizing config.h and (re)compiling the source code. This keeps fast, secure and simple.
+.SH SEE ALSO
+todo.txt, README.md
+.SH ISSUES
+Using right arrow to visit the last character in the first line. Cursor doesn't work without line numbers on.
+.SH CONTACT & BUGS
+Send all bug reports with a patch and messages to iammethatisyou@gmail.com

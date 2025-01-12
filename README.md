@@ -16,7 +16,7 @@ make install
 
 **Start program**
 ```bash
-text_editor
+se
 ```
 
 **Configuration**
@@ -27,8 +27,14 @@ sudo make uninstall && make install
 
 Todo is listed under todo.txt
 
-License
+**Documentation**
+For detailed usage instructions, refer to the man page:
+```bash
+man se
+```
+
+**License**
 This uses GNU V3 License
 
-Contact
+**Contact**
 iammethatisyou@gmail.com

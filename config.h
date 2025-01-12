@@ -3,7 +3,7 @@ using namespace std::chrono;
 
 const bool line_wrapping = true;
 
-const int numbered_lines = 1;
+const bool numbered_lines = true;
 
 const bool tab_spaces = false;
 const int tab_width   = 8; /* Only for tab_spaces = true*/

@@ -11,6 +11,7 @@
 #include <csignal>
 #include <sstream>
 #include <chrono>
+#include <sys/stat.h>
 #include <thread>
 using namespace std;
 
@@ -19,8 +20,15 @@ void control_c(int sig){
 	signal_received = true;
 }
 
+size_t storage_size(const char *argv){
+	struct stat st;
+	if (stat(argv, &st) != 0) {
+		return 0;}
+	return st.st_size;
+}
 void printing(const vector<string> raw_text, int &line_number, int &char_in_line){
 	/* curs_set(0); Cursor turned off, will fix later declared in main */
+	string line_without_number;
 	for (size_t i = 0; i < raw_text.size(); i++){
 		/* if (line_wrapping && raw_text[i].size() > 20) {
 			string new_line = raw_text[i].substr(20);
@@ -31,12 +39,19 @@ void printing(const vector<string> raw_text, int &line_number, int &char_in_line
 			i--;
 
 		} */
-		//move(raw_text[line_number].size(), char_in_line);
+		line_without_number += raw_text[i];
 		string line_with_number = to_string(i+1) + ' ' + raw_text[i];
+		if (i == line_number) {
+			if (line_number == 0){
+				line_with_number.insert(char_in_line + to_string(i+1).size() +1, "|");
+			} else {
+			line_with_number.insert(char_in_line + to_string(i+1).size() +1, "|");}
+			line_without_number.insert(char_in_line +1, "|");
+		}
 		if (numbered_lines) {
 			mvprintw(i, 0, "%s", line_with_number.c_str());
 		} else {
-			mvprintw(i, 0, "%s", raw_text[i].c_str());
+			mvprintw(i, 0, "%s", line_without_number.c_str());
 		}
 	clrtoeol(); /* Clear the rest of the line */
 	}
@@ -82,6 +97,7 @@ void editing(char *argv[]){
 	thread t1(auto_saving, argv, ref(raw_text) );
 	t1.detach();
 	const string text = reading(argv, raw_text); /* This makes the screen not blank before input */
+	if (raw_text.empty()) {raw_text.push_back(" "); } /* If a file is empty can't edit it */
 	printing(raw_text, line_number, char_in_line); /* Show text before input */
 	while (true){
 		if (signal_received){ /*Ctrl C*/
@@ -164,7 +180,7 @@ void editing(char *argv[]){
 				line_number++;
 				} }
 		else if (ch == KEY_UP){
-			if (raw_text.size() > 0){
+			if (raw_text.size() > 0 && line_number > 0){
 				if (char_in_line > raw_text[line_number -1].size()){
 					char_in_line = raw_text[line_number -1].size();}
 				line_number--;} }
@@ -205,10 +221,13 @@ void editing(char *argv[]){
 	const char save_choice = getch();
 	if (tolower(save_choice == 'y')){
 		saving(raw_text, argv);
-		printw("Saving to file");}
+		size_t file_size = storage_size(argv[1]);
+		printw("Saving to file");
+		printw("%zd\n", file_size);}
 	else {
 		printw("Not saving");}
 	refresh();
+	getch();
 	endwin();
 	mousemask(0, NULL);
 }
