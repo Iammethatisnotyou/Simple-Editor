@@ -1,5 +1,5 @@
 # Simple-Editor
-- Simple Editor or Se is a minimalist editor made in C++
+- Simple Editor or Se is a minimalist suckless inspired editor made in C++.
 - Uses Ncurses for terminal-based editing
 
 ## Installation
@@ -22,7 +22,7 @@ se
 **Configuration**
 Edit the config.h and recompile
 ```bash
-sudo make uninstall && make install
+make uninstall && make install
 ```
 
 Todo is listed under todo.txt

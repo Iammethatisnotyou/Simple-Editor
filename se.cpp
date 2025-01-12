@@ -211,7 +211,6 @@ void editing(char *argv[]){
 		clear();
 		refresh();
 		printing(raw_text, line_number, char_in_line);
-		clrtoeol(); /* Clear the rest of the line */
 		refresh();
 	}
 	clear();
@@ -220,12 +219,20 @@ void editing(char *argv[]){
 	refresh();
 	const char save_choice = getch();
 	if (tolower(save_choice == 'y')){
+		string format = "bytes";
 		saving(raw_text, argv);
 		size_t file_size = storage_size(argv[1]);
-		printw("Saving to file");
-		printw("%zd\n", file_size);}
-	else {
-		printw("Not saving");}
+
+		if (file_size >= 1024) {
+			file_size /= 1024;
+			format = "kilobytes";
+		}
+		string file_size_format = to_string(file_size) + " " + format;
+		printw("\nSaved to file\n");
+		printw("%s\n", file_size_format.c_str());
+		printw("\nPress any key to exit");
+	} else {
+		printw("\nNot saving\n\nPress any key to exit");}
 	refresh();
 	getch();
 	endwin();

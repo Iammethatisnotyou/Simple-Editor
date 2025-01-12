@@ -1,9 +1,11 @@
 iostream
 fstream
 string
-ncurses
 vector
-stdlib
+ncurses.h
+stdlib.h
 csignal
 sstream
-
+chrono
+sys/stat.h
+thread
