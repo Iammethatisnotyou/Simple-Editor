@@ -1,20 +1,18 @@
 TODO
 
+Turn editing function while true to another function
+show saved date size and char in line and line number
 Improve efficiency and speed
-Fix errors
+Fix common errors
 Change values to const if they don't change
-Fix cursor and make editor work on different terminal sizes
-Deceide what to do to differentiate text editor
+Make editor work on different terminal sizes
+Decide what to do to differentiate text editor
 Fix all the warnings with "-Wall" and "-Wextra"
-Add relative line
-Document the code for everyone else:
-- Add README with guide for Make and features
-- Document tricky parts in the code with comments
+
+Document tricky parts in the code with comments
 
 Add new features:
 - Settings
 --- .config or settings menu
 - Clipboard for xorg
-- Learn about mouse input with ncurses and possibly add it
-- Change block cursor to '|'
 - Get Ctrl backspace to work & Ctrl C to work better

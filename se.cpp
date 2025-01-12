@@ -91,6 +91,7 @@ void auto_saving(char *argv[], vector<string> &raw_text){
 
 void editing(char *argv[]){
 	MEVENT event;
+	mousemask(ALL_MOUSE_EVENTS, NULL);  // Or just BUTTON1_PRESSED for left-click
 	int char_in_line = 0;
 	int line_number  = 0;
 	vector<string> raw_text;
@@ -128,23 +129,22 @@ void editing(char *argv[]){
 		}
 		else if (ch == KEY_MOUSE){
 			if (getmouse(&event) == OK){
-				if (event.y >= 0 && event.y <= raw_text.size()){
-					line_number = event.y;}
-				else if (event.y >= raw_text.size()){
-					line_number = raw_text.size() -1;
-				}
-				else {
-					line_number = 0;
-				}
+				if (event.bstate & BUTTON1_CLICKED){
+					if (event.y >= 0 && event.y <= raw_text.size()){
+						line_number = event.y;
+					} else if (event.y >= raw_text.size()){
+						line_number = raw_text.size() -1;
+					} else {
+						line_number = 0;
+					}
 
-				if (event.x <= 0){
-					char_in_line = 0;
-				}
-				else if (line_number >= 0 &&  line_number < raw_text.size()){
-					char_in_line = min(event.x, (int)raw_text[line_number].size() );
-				}
-				else {
-					char_in_line = 0;
+					if (event.x <= 0){
+						char_in_line = 0;
+					} else if (line_number >= 0 &&  line_number < raw_text.size()){
+						char_in_line = min(event.x, (int)raw_text[line_number].size() );
+					} else {
+						char_in_line = 0;
+					}
 				}
 			}
 		}
