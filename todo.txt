@@ -1,5 +1,6 @@
 TODO
 
+Scroll through file
 Turn editing function while true to another function
 show saved date size and char in line and line number
 Improve efficiency and speed
@@ -9,10 +10,6 @@ Make editor work on different terminal sizes
 Decide what to do to differentiate text editor
 Fix all the warnings with "-Wall" and "-Wextra"
 
-Document tricky parts in the code with comments
-
 Add new features:
-- Settings
---- .config or settings menu
 - Clipboard for xorg
 - Get Ctrl backspace to work & Ctrl C to work better

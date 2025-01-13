@@ -26,8 +26,9 @@ size_t storage_size(const char *argv){
 		return 0;}
 	return st.st_size;
 }
-void printing(const vector<string> raw_text, int &line_number, int &char_in_line){
-	/* curs_set(0); Cursor turned off, will fix later declared in main */
+void printing(const vector<string> raw_text, unsigned int &line_number, unsigned int &char_in_line, char *argv[]){
+	string percent_through = to_string((line_number * 100) / (raw_text.size() -1)) + "%";
+	string bottom_bar = "\n" + string(argv[1]) + " " + percent_through + " " + to_string(line_number) + ":" + to_string(char_in_line);
 	string line_without_number;
 	for (size_t i = 0; i < raw_text.size(); i++){
 		/* if (line_wrapping && raw_text[i].size() > 20) {
@@ -53,7 +54,8 @@ void printing(const vector<string> raw_text, int &line_number, int &char_in_line
 		} else {
 			mvprintw(i, 0, "%s", line_without_number.c_str());
 		}
-	clrtoeol(); /* Clear the rest of the line */
+	printw("%s", bottom_bar.c_str());
+	clrtoeol();
 	}
 }
 string reading(char *argv[], vector<string>& raw_text){
@@ -92,14 +94,14 @@ void auto_saving(char *argv[], vector<string> &raw_text){
 void editing(char *argv[]){
 	MEVENT event;
 	mousemask(ALL_MOUSE_EVENTS, NULL);  // Or just BUTTON1_PRESSED for left-click
-	int char_in_line = 0;
-	int line_number  = 0;
+	unsigned int char_in_line = 0;
+	unsigned int line_number  = 0;
 	vector<string> raw_text;
 	thread t1(auto_saving, argv, ref(raw_text) );
 	t1.detach();
 	const string text = reading(argv, raw_text); /* This makes the screen not blank before input */
 	if (raw_text.empty()) {raw_text.push_back(" "); } /* If a file is empty can't edit it */
-	printing(raw_text, line_number, char_in_line); /* Show text before input */
+	printing(raw_text, line_number, char_in_line, argv); /* Show text before input */
 	while (true){
 		if (signal_received){ /*Ctrl C*/
 			signal_received = false;
@@ -109,7 +111,7 @@ void editing(char *argv[]){
 			getch();
 			flushinp(); /* Flush the input buffer to avoid leftover keys */
 			clear();
-			printing(raw_text, line_number, char_in_line);
+			printing(raw_text, line_number, char_in_line, argv);
 			refresh();
 			continue;}
 		const int ch = getch();
@@ -210,7 +212,7 @@ void editing(char *argv[]){
 				char_in_line++;} }
 		clear();
 		refresh();
-		printing(raw_text, line_number, char_in_line);
+		printing(raw_text, line_number, char_in_line, argv);
 		refresh();
 	}
 	clear();
