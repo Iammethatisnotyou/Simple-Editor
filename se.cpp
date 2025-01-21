@@ -12,6 +12,7 @@
 #include <sstream>
 #include <chrono>
 #include <sys/stat.h>
+#include <sys/ioctl.h>
 #include <thread>
 using namespace std;
 
@@ -27,6 +28,9 @@ size_t storage_size(const char *argv){
 	return st.st_size;
 }
 void printing(const vector<string> raw_text, unsigned int &line_number, unsigned int &char_in_line, char *argv[]){
+	struct winsize w;
+	ioctl(0, TIOCGWINSZ, &w);
+
 	string percent_through = to_string((line_number * 100) / (raw_text.size() -1)) + "%";
 	string bottom_bar = "\n" + string(argv[1]) + " " + percent_through + " " + to_string(line_number) + ":" + to_string(char_in_line);
 	string line_without_number;
@@ -54,6 +58,11 @@ void printing(const vector<string> raw_text, unsigned int &line_number, unsigned
 		} else {
 			mvprintw(i, 0, "%s", line_without_number.c_str());
 		}
+	if (w.ws_row > raw_text.size()){
+		size_t lines_to_print = (w.ws_row -1) - (raw_text.size());
+		for (size_t i = 0; i < lines_to_print; i++) {
+			printw("\n%c", empty_line_char);
+	} }
 	printw("%s", bottom_bar.c_str());
 	clrtoeol();
 	}
