@@ -30,9 +30,9 @@ size_t storage_size(const char *argv){
 void printing(const vector<string> raw_text, unsigned int &line_number, unsigned int &char_in_line, char *argv[]){
 	struct winsize w;
 	ioctl(0, TIOCGWINSZ, &w);
-
+	// print half the size of the line number above and below
 	string percent_through = to_string((line_number * 100) / (raw_text.size() -1)) + "%";
-	string bottom_bar = "\n" + string(argv[1]) + " " + percent_through + " " + to_string(line_number) + ":" + to_string(char_in_line);
+	string bottom_bar = "\n" + string(argv[1]) + " " + percent_through + " " + to_string(line_number +1) + ":" + to_string(char_in_line+1);
 	string line_without_number;
 	for (size_t i = 0; i < raw_text.size(); i++){
 		/* if (line_wrapping && raw_text[i].size() > 20) {
@@ -44,14 +44,14 @@ void printing(const vector<string> raw_text, unsigned int &line_number, unsigned
 			i--;
 
 		} */
-		line_without_number += raw_text[i];
+		line_without_number = raw_text[i];
 		string line_with_number = to_string(i+1) + ' ' + raw_text[i];
 		if (i == line_number) {
-			if (line_number == 0){
+			if (numbered_lines){
 				line_with_number.insert(char_in_line + to_string(i+1).size() +1, "|");
 			} else {
-			line_with_number.insert(char_in_line + to_string(i+1).size() +1, "|");}
-			line_without_number.insert(char_in_line +1, "|");
+				line_without_number.insert(char_in_line, "|");}
+
 		}
 		if (numbered_lines) {
 			mvprintw(i, 0, "%s", line_with_number.c_str());
@@ -64,7 +64,6 @@ void printing(const vector<string> raw_text, unsigned int &line_number, unsigned
 			printw("\n%c", empty_line_char);
 	} }
 	printw("%s", bottom_bar.c_str());
-	clrtoeol();
 	}
 }
 string reading(char *argv[], vector<string>& raw_text){
@@ -201,11 +200,19 @@ void editing(char *argv[]){
 					char_in_line = raw_text[line_number +1].size();}
 				line_number++;} }
 		else if (ch == KEY_RIGHT){
-			if (char_in_line < raw_text[line_number].size()){
-				char_in_line++;} }
+			if (char_in_line < raw_text[line_number].size()) {
+				char_in_line++;
+			} else if (horizontal_line_wrap == true &&
+					line_number < raw_text.size() -1){
+				char_in_line = 0;
+				line_number++;} }
 		else if (ch == KEY_LEFT){
 			if (char_in_line > 0){
-				char_in_line--;} }
+				char_in_line--;
+			} else if (horizontal_line_wrap == true && line_number > 0) {
+				char_in_line = raw_text[line_number-1].size();
+				line_number--;
+			} }
 		else if (ch == KEY_BACKSPACE || ch == 127){
 			if (char_in_line > 0){
 				raw_text[line_number].erase(char_in_line -1, 1);
@@ -242,10 +249,9 @@ void editing(char *argv[]){
 		printw("\nSaved to file\n");
 		printw("%s\n", file_size_format.c_str());
 		printw("\nPress any key to exit");
+		getch();
 	} else {
-		printw("\nNot saving\n\nPress any key to exit");}
-	refresh();
-	getch();
+		printw("\nNot saving\n");}
 	endwin();
 	mousemask(0, NULL);
 }
