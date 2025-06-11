@@ -1,23 +1,13 @@
-# My text editor - A simple text editor in C++
-# For information check the README, .gitignore and LICENSE files
+# Simple Editor - a simple text editor
 
-NCURSES  = -lncurses
-CXX      = g++
-Warnings = -Wall -Wextra
-CXXFLAGS = -std=c++17
-
-TARGET  = se
-SOURCES = se.cpp
-HEADERS = config.h
-
-MANPREFIX = $(PREFIX)/share/man
-MANPAGE = se.1
-PREFIX = /usr/local
+include config.mk
 
 all: $(TARGET)
 
-$(TARGET): $(SOURCES) $(HEADERS)
-	$(CXX) $(CXXFLAGS) $(NCURSES) -o $@ $(SOURCES)
+$(TARGET): $(SOURCE)
+	$(CXX) $(CXXFLAGS) $(WARNINGS) $(NCURSES) -o $@ $(SOURCE) $(MAIN)
+
+build: clean $(TARGET)
 
 clean:
 	rm -f $(TARGET)
