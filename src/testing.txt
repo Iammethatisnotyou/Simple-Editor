@@ -1,9 +1,0 @@
-/* if (line_wrapping && raw_text[i].size() > 20) {
-		    string new_line = raw_text[i].substr(20);
-		    raw_text[i] = raw_text[i].substr(0, 20);
-		    raw_text.insert(raw_text.begin() + i + 1, new_line);
-		    char_in_line = 0;
-		    line_number++;
-		    i--;
-
-} */

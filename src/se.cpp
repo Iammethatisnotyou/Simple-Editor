@@ -1,6 +1,5 @@
-/*
- * See LICENSE file for copyright and license details.
- */
+/* See LICENSE file for copyright and license details. */
+
 #include <chrono>
 #include <csignal>
 #include <fstream>
@@ -47,21 +46,18 @@ void printing(const vector<string> raw_text, unsigned int &line_number, unsigned
 	string percent_through = to_string((line_number * 100) / (raw_text.size() - 1)) + "%";
 	string bottom_bar      = "\n" + string(argv[1]) + " " + percent_through + " " + to_string(line_number + 1) + ":" + to_string(char_in_line + 1);
 	string line_without_number;
+
 	for (size_t i = 0; i < raw_text.size(); i++) {
 		line_without_number     = raw_text[i];
 		string line_with_number = to_string(i + 1) + ' ' + raw_text[i];
 		if (i == line_number) {
-			if (numbered_lines) {
-				line_with_number.insert(char_in_line + to_string(i + 1).size() + 1, "|");
-			} else {
-				line_without_number.insert(char_in_line, "|");
-			}
+			if (numbered_lines) line_with_number.insert(char_in_line + to_string(i + 1).size() + 1, "|");
+			else line_without_number.insert(char_in_line, "|");
 		}
-		if (numbered_lines) {
-			mvprintw(i, 0, "%s", line_with_number.c_str());
-		} else {
-			mvprintw(i, 0, "%s", line_without_number.c_str());
-		}
+
+		if (numbered_lines) mvprintw(i, 0, "%s", line_with_number.c_str());
+		else mvprintw(i, 0, "%s", line_without_number.c_str());
+		
 		if (w.ws_row > raw_text.size()) {
 			size_t lines_to_print = (w.ws_row - 1) - (raw_text.size());
 			for (size_t j = 0; j < lines_to_print; j++) {
@@ -72,18 +68,17 @@ void printing(const vector<string> raw_text, unsigned int &line_number, unsigned
 	}
 }
 string reading(char **argv, vector<string> &raw_text) {
-	string text;
-	string elagent_text;
+	string text, elegant_text;
 	ifstream File(argv[1]);
 
 	while (getline(File, text)) {
 		raw_text.push_back(text);
 	}
 	for (size_t i = 0; i < raw_text.size(); i++) {
-		elagent_text += raw_text[i] + '\n';
+		elegant_text += raw_text[i] + '\n';
 	}
 	File.close();
-	return elagent_text;
+	return elegant_text;
 }
 void saving(const vector<string> raw_text, char **argv) {
 	string new_text;
@@ -95,9 +90,7 @@ void saving(const vector<string> raw_text, char **argv) {
 	File.close();
 }
 void auto_saving(char **argv, vector<string> &raw_text) {
-	if (!auto_save) {
-		return;
-	}
+	if (!auto_save) return;
 	while (true) {
 		this_thread::sleep_for(chrono::seconds(auto_save_interval));
 		saving(raw_text, argv);
@@ -113,9 +106,7 @@ void editing(char **argv) {
 	t1.detach();
 
 	const string text = reading(argv, raw_text); /* This makes the screen not blank before input */
-	if (raw_text.empty()) {
-		raw_text.push_back(" ");
-	}                                                    /* If a file is empty can't edit it */
+	if (raw_text.empty()) raw_text.push_back(" \n"); /* If a file is empty can't edit */
 	printing(raw_text, line_number, char_in_line, argv); /* Show text before input */
 	while (true) {
 		if (signal_received) { /*Ctrl C*/
@@ -166,7 +157,7 @@ void editing(char **argv) {
 		} else if (ch == ' ') {
 			raw_text[line_number].insert(char_in_line, +1, ' ');
 			char_in_line++;
-		} else if (ch == 8 /*8 = Ctrl Backspace*/) {
+		} else if (ch == 8 /* 8 = Ctrl Backspace */) {
 			if (char_in_line > 0) {
 				int target_word_index = 2;
 				int current_index     = 0;
@@ -267,24 +258,18 @@ void editing(char **argv) {
 		printw("%s\n", file_size_format.c_str());
 		printw("\nPress any key to exit");
 		getch();
-	} else {
-		printw("\nNot saving\n");
-	}
+	} else printw("\nNot saving\n");
+
 	endwin();
 	mousemask(0, NULL);
 }
 void verification(int argc, char **argv) {
-	if (argc >= 3) {
-		die("One too many arguments:");
-	} else if (argc == 1) {
-		die("Not enough arguments which file to open?:");
-	}
+	if (argc >= 3) die("Too many arguments:");
+	else if (argc == 1) die("Not enough arguments which file to open?:");
 
 	ifstream File(argv[1]);
-	if (!File.is_open()) {
-		cerr << "couldn't find or open file\n";
-		exit(1);
-	}
+
+	if (!File.is_open()) die("Couldn't find or open file:");
 	File.close();
 }
 int main(int argc, char **argv) {
